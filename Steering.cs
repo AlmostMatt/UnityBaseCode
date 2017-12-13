@@ -273,6 +273,42 @@ public class Steering : Entity
 		flee(other.transform.position);
 	}
 
+  public void separate(Neighbours<Unit> neighbours) {
+		float TOO_CLOSE = 0.8f; // radius is 0.
+		Vector2 steer = new Vector2(0f, 0f);
+		float totalforce = 0f;
+		// steer away from each object that is too close with a weight of up to 0.5 for each
+		foreach (Tuple<float, Unit> tuple in neighbours) {
+			if (tuple.First > TOO_CLOSE * TOO_CLOSE) {
+				break;
+			}
+			Unit other = tuple.Second;
+			Vector2 offset = other.transform.position - transform.position;
+			float d = Mathf.Sqrt(tuple.First);
+			if (d == 0f) {
+				// Units spawn with identical position.
+				offset = new Vector2(0.01f, 0f);
+				d = 0.01f;
+			}
+			// only prioritize separation if the objects are moving toward each other
+			float importance = 0.5f;//(sameDir(v1, v2) || !sameDir(v1, offset)) ? 0.3f : 0.6f;
+			// force of 0.5 per other
+			float force = importance * (TOO_CLOSE - d)/TOO_CLOSE;
+			totalforce += force;
+			steer += (- force / d) * offset;
+			break;
+		}
+		float m = steer.magnitude * ACCEL;
+		if (m >= forceRemaining) {
+			steer = scaled(forceRemaining, steer);
+			forceRemaining = 0f;
+		} else {
+			steer = ACCEL * steer;
+			forceRemaining -= m;
+		}
+		rb.AddForce(steer);
+	}
+
 	// avoid individual static objects
 	protected void avoid(List<Vector2> obstacles) {
 		
