@@ -2,14 +2,14 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class Steering : Entity
+public class Steering : MonoBehaviour
 {
 	public bool turnAutomatically = true;
 
-	protected float MAXV = 5f;
-	protected float ACCEL = 20f;
-	protected float TURN_RATE = 900f;
-	protected float forceRemaining;
+	public float MAXV = 5f;
+	public float ACCEL = 20f;
+	public float TURN_RATE = 900f;
+	private float forceRemaining;
 
 	private static float dt;
 
@@ -20,6 +20,15 @@ public class Steering : Entity
 	/*
 	 * Utility functions
 	 */
+
+	public void setSpeed(float maxV, float accel) {
+		MAXV = maxV;
+		ACCEL = accel;
+	}
+
+	public float getMaxSpeed() {
+		return MAXV;
+	}
 
 	private Vector2 scaled(float n, Vector2 v) {
 		return n * v.normalized;
@@ -48,16 +57,16 @@ public class Steering : Entity
 		}
 	}
 
-	protected float angleToward(Vector2 target) {
+	public float angleToward(Vector2 target) {
 		var diff = target - (Vector2) transform.position;
 		return Mathf.Rad2Deg * Mathf.Atan2(diff.y, diff.x);
 	}
 	
-	protected void turnToward(Vector2 target) {
+	public void turnToward(Vector2 target) {
 		turnToward(angleToward(target));
 	}
 
-	protected void turnToward(float angle2) {
+	public void turnToward(float angle2) {
 		float angle1 = transform.localEulerAngles.z;
 		float diff = angleDiff(angle1, angle2);
 		float rot = TURN_RATE * Time.fixedDeltaTime;
@@ -186,7 +195,7 @@ public class Steering : Entity
 	 * Steering behaviours
 	 */
 
-	protected void moveInDirection(Vector2 direction) {
+	public void moveInDirection(Vector2 direction) {
 		Vector2 desiredV = direction * MAXV;
 		if (desiredV.magnitude > MAXV) {
 			desiredV = desiredV * MAXV / desiredV.magnitude;
@@ -194,7 +203,7 @@ public class Steering : Entity
 		rb.AddForce(ACCEL * (desiredV - rb.velocity));
 	}
 	
-	protected void brake() {
+	public void brake() {
 		Vector2 deltaV = - rb.velocity;
 		float dvmagn = deltaV.magnitude;
 		if (dvmagn > forceRemaining * forceRemaining * dt * dt) {
@@ -206,12 +215,12 @@ public class Steering : Entity
 		}
 	}
 	
-	protected void pursue(Vector2 otherPos, Vector2 otherV) {
+	public void pursue(Vector2 otherPos, Vector2 otherV) {
 		Vector2 force = pursueForce(otherPos, otherV, forceRemaining);
 		rb.AddForce(force);
 	}
 	
-	protected void pursue(GameObject other) {
+	public void pursue(GameObject other) {
 		Vector3 otherVelocity = new Vector3();
 		if (other.GetComponent<Rigidbody2D>() != null) {
 			otherVelocity = other.GetComponent<Rigidbody2D>().velocity;
@@ -219,16 +228,16 @@ public class Steering : Entity
 		pursue(other.transform.position, otherVelocity);
 	}
 	
-	protected void seek(Vector2 dest) {
+	public void seek(Vector2 dest) {
 		Vector2 force = seekForce(dest, forceRemaining);
 		rb.AddForce(force);
 	}
 
-	protected void seek(GameObject other) {
+	public void seek(GameObject other) {
 		seek(other.transform.position);
 	}
 	
-	protected void arrival(Vector2 dest) {
+	public void arrival(Vector2 dest) {
 		// can approximate with (if too close : break)
 		// alternatively stopdist from current pos and current speed
 		// or expected stopdist after the current frame assuming accel wont change the current frame much
@@ -255,36 +264,36 @@ public class Steering : Entity
 		}
 	}
 
-	protected void evade(Vector2 otherPos, Vector2 otherV) {
+	public void evade(Vector2 otherPos, Vector2 otherV) {
 		Vector2 force = pursueForce(otherPos, otherV, forceRemaining);
 		rb.AddForce(-force);
 	}
 
-	protected void evade(GameObject other) {
+	public void evade(GameObject other) {
 		evade(other.transform.position, other.GetComponent<Rigidbody2D>().velocity);
 	}
 
-	protected void flee(Vector2 otherPos) {
+	public void flee(Vector2 otherPos) {
 		Vector2 force = -seekForce(otherPos, forceRemaining);
 		rb.AddForce(force);
 	}
 	
-	protected void flee(GameObject other) {
+	public void flee(GameObject other) {
 		flee(other.transform.position);
 	}
 
-  public void separate(Neighbours<Unit> neighbours) {
+	public void separate<T>(Neighbours<T> neighbours) where T : MonoBehaviour {
 		float TOO_CLOSE = 0.8f; // radius is 0.
 		Vector2 steer = new Vector2(0f, 0f);
 		float totalforce = 0f;
 		// steer away from each object that is too close with a weight of up to 0.5 for each
-		foreach (Tuple<float, Unit> tuple in neighbours) {
-			if (tuple.First > TOO_CLOSE * TOO_CLOSE) {
+		foreach (Neighbour<T> neighbour in neighbours) {
+			if (neighbour.dd > TOO_CLOSE * TOO_CLOSE) {
 				break;
 			}
-			Unit other = tuple.Second;
+			GameObject other = neighbour.obj.gameObject;
 			Vector2 offset = other.transform.position - transform.position;
-			float d = Mathf.Sqrt(tuple.First);
+			float d = Mathf.Sqrt(neighbour.dd);
 			if (d == 0f) {
 				// Units spawn with identical position.
 				offset = new Vector2(0.01f, 0f);
@@ -310,12 +319,12 @@ public class Steering : Entity
 	}
 
 	// avoid individual static objects
-	protected void avoid(List<Vector2> obstacles) {
+	public void avoid(List<Vector2> obstacles) {
 		
 	}
 
 	// avoid edges of the pathable areas (large walls)
-	protected void containment(List<Rect> walls) {
+	public void containment(List<Rect> walls) {
 		
 	}
 }
