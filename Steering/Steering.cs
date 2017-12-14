@@ -282,6 +282,15 @@ public class Steering : MonoBehaviour
 		flee(other.transform.position);
 	}
 
+	/* 
+	 * Avoid collisions by determining for each neighbor when their paths will be closest to each other
+	 * and then steer laterally to avoid collision.
+	 * https://www.red3d.com/cwr/steer/Unaligned.html
+	 */
+	public void collisionAvoidance<T>(Neighbours<T> neighbours) where T : MonoBehaviour {
+
+	}
+
 	public void separate<T>(Neighbours<T> neighbours) where T : MonoBehaviour {
 		float TOO_CLOSE = 0.8f; // radius is 0.
 		Vector2 steer = new Vector2(0f, 0f);
