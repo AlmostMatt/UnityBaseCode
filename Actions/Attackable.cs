@@ -13,5 +13,5 @@ public interface Attackable {
 	{
 		get;
 	}
-	void damage(Player attacker, int amount);
+	void damage(Actor attacker, int amount);
 }

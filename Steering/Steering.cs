@@ -2,6 +2,9 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
+/*
+ * Steering behaviours as described by https://red3d.com/cwr/steer/
+ */
 public class Steering : MonoBehaviour
 {
 	public bool turnAutomatically = true;

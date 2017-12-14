@@ -11,10 +11,6 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 
-public interface Actor {
-	StatusMap statusMap { get; set; }
-}
-
 public class ActionMap
 {
 	Dictionary<int, Ability> actions; 
