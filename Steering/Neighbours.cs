@@ -16,6 +16,7 @@ public class Neighbour<T>
 public class Neighbours<T> : IEnumerable<Neighbour<T>>
 {
 	private SortedList<float, List<T>> _neighbours;
+	public int Count { get {return _neighbours.Count;} }
 
 	public Neighbours ()
 	{

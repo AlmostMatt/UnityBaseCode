@@ -1,6 +1,8 @@
 using UnityEngine;
 using System;
 
+public delegate void AbilityCallback(AbilityTarget target);
+
 public class Ability
 {
 	// maxcd is constant, cd is remaining
@@ -11,13 +13,14 @@ public class Ability
 	public float castTime;
 	private float animTime;
 
+	private AbilityCallback abilityCallback;
+	private AbilityTarget target;
+
 	public Actor owner;
 
-	// either a unit, a point, a direction, or none
-	private object target;
-
-	public Ability (float cooldown, float castT = 0f)
+	public Ability (AbilityCallback callback, float cooldown, float castT = 0f)
 	{
+		abilityCallback = callback;
 		cd = 0f;
 		castTime = castT;
 		maxcd = cooldown;
@@ -30,34 +33,29 @@ public class Ability
 	public void update(float dt) {
 		cd = Math.Max(0f, cd - dt);
 		if (animTime > 0) {
-			if (animTime < dt) {
+			if (animTime <= dt) {
 				animTime = 0f;
-				onCast(target);
+				abilityCallback(target);
 			} else {
 				animTime -= dt;
 			}
 		}
 	}
 
-	// when the unit decides to use the ability
-	public void use(object targ) {
+	public void use(AbilityTarget abilityTarget) {
 		cd = maxcd;
-		animTime = castTime;
-		target = targ;
 		if (castTime == 0f) {
-			onCast(target);
+			abilityCallback(abilityTarget);
+		} else {
+			// record the target so that it is still known after the animation time has completed.
+			this.target = abilityTarget;
+			animTime = castTime;
+			owner.statusMap.add(new Status(State.ANIMATION), castTime);
 		}
 	}
 
-	// when the unit decides to use the ability
+	// When something external affects the current cooldown.
 	public void setCurrentCooldown(float currentCooldown) {
 		cd = currentCooldown;
-	}
-
-	// when the ability happens (after the animation)
-	public virtual void onCast(object target) {
-		// override this
-		// attack
-		//owner.fire((Attackable) target);
 	}
 }

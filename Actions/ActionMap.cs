@@ -7,11 +7,12 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
+using UnityEngine;
 using System;
 using System.Collections.Generic;
 
 public interface Actor {
-
+	StatusMap statusMap { get; set; }
 }
 
 public class ActionMap
@@ -33,8 +34,16 @@ public class ActionMap
 		action.owner = owner;
 	}
 
-	public void use(int id, object target) {
-		actions[id].use(target);
+	public void use(int abilityId, Attackable attackable) {
+		use(abilityId, new AbilityTarget(attackable));
+	}
+
+	public void use(int abilityId, Vector3 position) {
+		use(abilityId, new AbilityTarget(position));
+	}
+
+	private void use(int abilityId, AbilityTarget target) {
+		actions[abilityId].use(target);
 	}
 
 	public void setCurrentCooldown(int id, float cooldown) {
