@@ -9,6 +9,13 @@ using System.Collections.Generic;
  */
 public class Steering : MonoBehaviour
 {
+	private Rigidbody2D rb;
+	private Vector2 forwardVector;
+
+	// For debug lines:
+	private Color VELOCITY_COLOR = Color.blue;
+	private Color[] BEHAVIOUR_COLORS = {Color.red, Color.green, Color.white, Color.cyan, Color.yellow};
+
 	// Whether or not the object turns toward the current velocity vector.
 	private bool turnAutomatically = true;
 	private float turnRate = 900f;
@@ -18,6 +25,10 @@ public class Steering : MonoBehaviour
 
 	private List<SteeringBehaviour> behaviours = new List<SteeringBehaviour>();
 	private List<float> behaviourWeights = new List<float>();
+
+	public void Start() {
+		rb = GetComponent<Rigidbody2D>();
+	}
 
 	public void setSpeed(float maxSpeed, float acceleration) {
 		this.maxSpeed = maxSpeed;
@@ -29,6 +40,10 @@ public class Steering : MonoBehaviour
 		behaviourWeights.Add(weight);
 	}
 
+	// TODO: provide a way to change the weight of a behaviour
+	// aka either make steeringbehaviour abstract and give it properties
+	// or provide some sort of conditional/variable weight function when adding a behaviour
+
 	public void clearBehaviours() {
 		behaviours.Clear();
 		behaviourWeights.Clear();
@@ -38,15 +53,18 @@ public class Steering : MonoBehaviour
 	// TODO: call rb.AddForce on the weighted sum of the available forces. Also if a behaviour provides a force of size < accel, it counts less towards the total weight
 
 	public void FixedUpdate () {
-		Rigidbody2D rb = GetComponent<Rigidbody2D>();
 		float totalWeight = 0f;
 		Vector2 totalForce = new Vector2();
 		for (int i=0; i< behaviours.Count; i++) {
 			Vector2 behaviourForce = behaviours[i].getForce(this);
-			totalForce += behaviourForce;
-			totalWeight += behaviourForce.magnitude / acceleration;
+			totalForce += behaviourWeights[i] * behaviourForce;
+			totalWeight += behaviourWeights[i] * behaviourForce.magnitude / acceleration;
+			SteeringUtilities.drawDebugVector(this, 0.1f * behaviourForce, BEHAVIOUR_COLORS[i % BEHAVIOUR_COLORS.Length]);
 		}
-		rb.AddForce(totalForce);
+		// TODO: consider averaging the desired velocities instead of forces
+		if (totalWeight > 0f) {
+			rb.AddForce(totalForce / totalWeight);
+		}
 		// Enforce a maximum speed
 		float velocitySquared = rb.velocity.sqrMagnitude;
 		if (velocitySquared > maxSpeed * maxSpeed) {
@@ -56,8 +74,7 @@ public class Steering : MonoBehaviour
 		if (turnAutomatically && velocitySquared > 0.5) {
 			turnToward(SteeringUtilities.angleForVector(rb.velocity));
 		}
-		Debug.DrawLine(transform.position, (Vector2) transform.position + (0.1f * totalForce));
-		Debug.DrawLine(transform.position, (Vector2) transform.position + (1f * rb.velocity));
+		//SteeringUtilities.drawDebugVector(this, (0.5f * getVelocity()), VELOCITY_COLOR);
 	}
 
 	public float getMaxSpeed() {
@@ -73,7 +90,7 @@ public class Steering : MonoBehaviour
 	}
 
 	public Vector2 getVelocity() {
-		return GetComponent<Rigidbody2D>().velocity;
+		return rb.velocity;
 	}
 
 	private void turnToward(float desiredAngle) {

@@ -7,11 +7,11 @@
  */
 // Neighbours<T> neighbours where T : Steering
 
-public class CollisionAvoidance : SteeringBehaviour
+public class UnalignedCollisionAvoidance : SteeringBehaviour
 {
 	Vector2 target;
 
-	public CollisionAvoidance(Vector2 target) {
+	public UnalignedCollisionAvoidance(Vector2 target) {
 		this.target = target;
 	}
 
