@@ -24,7 +24,7 @@ public class Wander : SteeringBehaviour
 		// Constrain the wander point to the unit circle in front of the player.
 		wanderPoint = forwardPoint + (wanderPoint - forwardPoint).normalized;
 		//return SteeringUtilities.getForceForDirection(steering, wanderDirection);
-		SteeringUtilities.drawDebugCircle(forwardPoint, 1f, Color.black, 32);
+		//SteeringUtilities.drawDebugCircle(forwardPoint, 1f, Color.black, 32);
 		SteeringUtilities.drawDebugPoint(wanderPoint, Color.red);
 		return SteeringUtilities.getSeekForce(steering, wanderPoint);
 	}

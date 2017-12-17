@@ -63,6 +63,7 @@ public class Steering : MonoBehaviour
 		}
 		// TODO: consider averaging the desired velocities instead of forces
 		if (totalWeight > 0f) {
+			//SteeringUtilities.drawDebugVector(this, 0.1f * totalForce / totalWeight, Color.blue);
 			rb.AddForce(totalForce / totalWeight);
 		}
 		// Enforce a maximum speed
@@ -91,6 +92,15 @@ public class Steering : MonoBehaviour
 
 	public Vector2 getVelocity() {
 		return rb.velocity;
+	}
+
+	public float getStoppingTime() {
+		return getVelocity().magnitude / getAcceleration();
+	}
+
+	public float getStoppingDistance() {
+		// StopTime = speed/accel, AvgSpeed while stoppping = speed/2, Distance = speed^2 / (accel * 2)
+		return getVelocity().sqrMagnitude / (getAcceleration() * 2);
 	}
 
 	private void turnToward(float desiredAngle) {
