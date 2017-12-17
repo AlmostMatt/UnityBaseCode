@@ -31,13 +31,16 @@ Usage:
 
 ## ActionMap:
 Abilities have cooldowns and callback functions.
-To use:
-* add a statusMap property to the object (to track the ANIMATION status).
+
+Usage:
+* add a statusMap property to the object (the ANIMATION status is added during the cast time of an ability).
 * `actionMap = new ActionMap(this);`
-* `actionMap.add(abilityNumber, new Ability(callbackFunction, castTime));`
+* `actionMap.add(abilityNumber, new Ability(callbackFunction, cooldown, castTime));`
 * in FixedUpdate: `actionMap.update(Time.fixedDeltaTime);`
 * `if (actionMap.ready(abilityNumber) && !statusMap.has(STATE.STUNNED))`
 * `actionMap.use(abilityNumber, target);`
 
+
+Some of the functionality is demonstrated in https://github.com/AlmostMatt/SteeringDemo
 
 Note: I will likely change many things over time.
