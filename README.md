@@ -4,9 +4,21 @@ Contains some generic concepts that I find myself reusing across projects
 ## Steering:
 Defines steering behaviours similar to those described by https://www.red3d.com/cwr/steer/
 
-To use:
+Usage:
 * add a Steering component to an object
 * call `GetComponent<Steering>().addBehaviour(weight, behaviour)` in the Start() function of a script
+
+Supported Behaviours:
+* Seek
+* Pursue
+* Flee
+* Evade
+* WallAvoidance
+* UnalignedCollisionAvoidance
+* Wander
+* Separation (in progress)
+* Cohesion (in progress)
+* Alignment (in progress)
 
 ## StatusMap:
 Tracks temporary status effects on an object. Status effects can optionally have begin and end callback functions.
@@ -24,5 +36,8 @@ To use:
 * `actionMap = new ActionMap(this);`
 * `actionMap.add(abilityNumber, new Ability(callbackFunction, castTime));`
 * in FixedUpdate: `actionMap.update(Time.fixedDeltaTime);`
-* `if (actionMap.ready(abilityNumber) && !statusMap.has(STATE>STUNNED))`
+* `if (actionMap.ready(abilityNumber) && !statusMap.has(STATE.STUNNED))`
 * `actionMap.use(abilityNumber, target);`
+
+
+Note: I will likely change many things over time.
