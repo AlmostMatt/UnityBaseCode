@@ -5,21 +5,20 @@ public class WallAvoidance : SteeringBehaviour
 	private Quaternion rotateLeftQuaternion = Quaternion.AngleAxis(25f, Vector3.forward);
 	private Quaternion rotateRightQuaternion = Quaternion.AngleAxis(-25f, Vector3.forward);
 
-	private float desiredDistance;
 	private int layerMask;
 
-	public WallAvoidance(float desiredDistance = 0.75f, int layerMask = Physics2D.DefaultRaycastLayers) {
-		this.desiredDistance = desiredDistance;
+	public WallAvoidance(int layerMask = Physics2D.DefaultRaycastLayers) {
 		this.layerMask = layerMask;
 	}
 
 	public Vector2 getForce(Steering steering) {
-		// TODO: scale raycast distance with current velocity (aka stoppping distance)
+		float raycastDistance = steering.getSize() + 2f * (steering.getMaxSpeed() * steering.getMaxSpeed() / steering.getAcceleration());
 		// TODO: send out 3 rays and define static quaternions to determine the rotated direction vectors.
 		Vector3 directionVector = steering.getVelocity();
-		Vector2 hitNormal1 = raycast(steering, rotateLeftQuaternion * directionVector, 1f);
-		Vector2 hitNormal2 = raycast(steering, directionVector, 2.25f);
-		Vector2 hitNormal3 = raycast(steering, rotateRightQuaternion * directionVector, 1f);
+		// TODO: update the side raycast lengths based on steering's size, and the center raycast based on speed.
+		Vector2 hitNormal1 = raycast(steering, rotateLeftQuaternion * directionVector, raycastDistance * 0.5f);
+		Vector2 hitNormal2 = raycast(steering, directionVector, raycastDistance);
+		Vector2 hitNormal3 = raycast(steering, rotateRightQuaternion * directionVector, raycastDistance * 0.5f);
 		// If multiple raycasts hit, sum the normals.
 		// TODO: weight the normals differently based on which collision point is closest.
 		Vector2 combinedNormal = SteeringUtilities.scaledDownVector(1f, hitNormal1 + hitNormal2 + hitNormal3);
@@ -37,8 +36,8 @@ public class WallAvoidance : SteeringBehaviour
 		RaycastHit2D hitInfo = Physics2D.Raycast(steering.getPosition(), directionVector, raycastDistance, layerMask);
 		//SteeringUtilities.drawDebugVector(steering, SteeringUtilities.scaledVector(raycastDistance, directionVector), Color.white);
 		if (hitInfo.collider != null) {
-			SteeringUtilities.drawDebugPoint(hitInfo.point, Color.white);
-			SteeringUtilities.drawDebugVector(steering, hitInfo.point - steering.getPosition(), Color.white);
+			SteeringUtilities.drawDebugPoint(hitInfo.point, Color.magenta);
+			SteeringUtilities.drawDebugVector(steering, hitInfo.point - steering.getPosition(), Color.magenta);
 			return hitInfo.normal;
 		}
 		return Vector2.zero;

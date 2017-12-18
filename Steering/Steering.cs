@@ -7,10 +7,9 @@ using System.Collections.Generic;
  * Steering behaviours as described by https://red3d.com/cwr/steer/
  * See also: https://github.com/antonpantev/unity-movement-ai
  */
-public class Steering : MonoBehaviour
+public class Steering : MonoBehaviour, ObjectWithPosition
 {
 	private Rigidbody2D rb;
-	private Vector2 forwardVector;
 
 	// For debug lines:
 	private Color VELOCITY_COLOR = Color.blue;
@@ -22,17 +21,13 @@ public class Steering : MonoBehaviour
 
 	private float maxSpeed = 5f;
 	private float acceleration = 20f;
+	private float radius = 0.5f;
 
 	private List<SteeringBehaviour> behaviours = new List<SteeringBehaviour>();
 	private List<float> behaviourWeights = new List<float>();
 
 	public void Start() {
 		rb = GetComponent<Rigidbody2D>();
-	}
-
-	public void setSpeed(float maxSpeed, float acceleration) {
-		this.maxSpeed = maxSpeed;
-		this.acceleration = acceleration;
 	}
 
 	public void addBehaviour(float weight, SteeringBehaviour behaviour) {
@@ -76,6 +71,19 @@ public class Steering : MonoBehaviour
 			turnToward(SteeringUtilities.angleForVector(rb.velocity));
 		}
 		//SteeringUtilities.drawDebugVector(this, (0.5f * getVelocity()), VELOCITY_COLOR);
+	}
+
+	public void setSize(float radius) {
+		this.radius = radius;
+	}
+
+	public void setSpeed(float maxSpeed, float acceleration) {
+		this.maxSpeed = maxSpeed;
+		this.acceleration = acceleration;
+	}
+
+	public float getSize() {
+		return radius;
 	}
 
 	public float getMaxSpeed() {
