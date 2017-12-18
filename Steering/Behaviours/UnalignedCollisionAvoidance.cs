@@ -3,24 +3,26 @@
 public class UnalignedCollisionAvoidance : SteeringBehaviour
 {
 	private bool isResponsibleForNeighbourUpdate = false;
-	Neighbours<Steering, Steering> nearbyUnits;
+	Neighbours<Steering, Steering> neighbours;
 
 	public UnalignedCollisionAvoidance(Steering currentObject) {
 		isResponsibleForNeighbourUpdate = true;
-		nearbyUnits = new Neighbours<Steering, Steering>(currentObject);
-		nearbyUnits.AddRange(Object.FindObjectsOfType<Steering>());
-		nearbyUnits.Remove(currentObject);
+		this.neighbours = new Neighbours<Steering, Steering>(currentObject);
+		this.neighbours.AddRange(Object.FindObjectsOfType<Steering>());
+		this.neighbours.Remove(currentObject);
 	}
 
+	// TODO: figure out how to convert back and forth between neighbour<unit> and neighbour<steering>
+	// Possibly with GetComponent or with an interface ObjectWithSteering
 	public UnalignedCollisionAvoidance(Neighbours<Steering, Steering> neighbours) {
 		isResponsibleForNeighbourUpdate = false;
-		nearbyUnits = neighbours;
+		this.neighbours = neighbours;
 	}
 
 	public Vector2 getForce(Steering steering) {
 		if (isResponsibleForNeighbourUpdate) {
 			// TODO: figure out how to add or remove neighbours automatically here or in neighbours
-			nearbyUnits.Update();
+			neighbours.Update();
 		}
 
 		/* 
@@ -30,7 +32,7 @@ public class UnalignedCollisionAvoidance : SteeringBehaviour
 		 */
 		float distanceToBeginReacting = 4f * (steering.getSize() + steering.getStoppingDistance());
 		//Debug.Log(doubleStopDistance);
-		foreach (Neighbour<Steering> neighbour in nearbyUnits) {
+		foreach (Neighbour<Steering> neighbour in neighbours) {
 			if (neighbour.dd > distanceToBeginReacting  * distanceToBeginReacting) {
 				break;
 			}
@@ -49,8 +51,14 @@ public class UnalignedCollisionAvoidance : SteeringBehaviour
 				continue;
 			}
 			SteeringUtilities.drawDebugVector(steering, timeToCollision * steering.getVelocity(), Color.cyan);
+			SteeringUtilities.drawDebugPoint(steering.getPosition() + timeToCollision * steering.getVelocity(), Color.cyan);
 			SteeringUtilities.drawDebugVector(otherUnit, timeToCollision * otherUnit.getVelocity(), Color.cyan);
-			return SteeringUtilities.getForceForDirection(steering, -closestOffset);
+			SteeringUtilities.drawDebugPoint(otherUnit.getPosition() + timeToCollision * otherUnit.getVelocity(), Color.cyan);
+			// TODO: for head-on collisions steer to the right
+			// Steer in the direction of the component of the collision normal that is perpindicular to the current velocity.
+			// This way the unit will turn instead of just slowing down.
+			return SteeringUtilities.scaledVector(steering.getAcceleration(), SteeringUtilities.perpindicularComponent(-closestOffset, steering.getVelocity()));
+			//return SteeringUtilities.getForceForDirection(steering, -closestOffset);
 		}
 		return Vector2.zero;
 	}

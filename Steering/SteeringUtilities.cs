@@ -38,9 +38,11 @@ public class SteeringUtilities
 
 	// Returns the difference between two angles within the [-180,180) range
 	public static float angleDiff(float oldAngle, float newAngle) {
-		return (180 + newAngle - oldAngle) % 360 - 180;
+		// Csharp doesn't handle negative modulo the way that I want, so I add 180+360+360 to make it positive.
+		return ((900 + newAngle - oldAngle) % 360f) - 180;
 	}
 
+	// Returns the angle in degrees corresponding to a vector.
 	public static float angleForVector(Vector2 direction) {
 		return Mathf.Rad2Deg * Mathf.Atan2(direction.y, direction.x);
 	}

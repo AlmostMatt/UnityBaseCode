@@ -2,50 +2,45 @@
 
 public class Separate : SteeringBehaviour
 {
-	Vector2 target;
+	private float preferredDistance;
+	private bool isResponsibleForNeighbourUpdate = false;
+	Neighbours<Steering, Steering> neighbours;
 
-	public Separate(Vector2 target) {
-		this.target = target;
+	/**
+	 * Will move away from nearby units if the current distance is less than the preferred distance.
+	 */
+	public Separate(Steering currentObject, float preferredDistance) {
+		this.preferredDistance = preferredDistance;
+		isResponsibleForNeighbourUpdate = true;
+		this.neighbours = new Neighbours<Steering, Steering>(currentObject);
+		this.neighbours.AddRange(Object.FindObjectsOfType<Steering>());
+		this.neighbours.Remove(currentObject);
+	}
+
+	public Separate(Neighbours<Steering, Steering> neighbours, float preferredDistance) {
+		this.preferredDistance = preferredDistance;
+		isResponsibleForNeighbourUpdate = false;
+		this.neighbours = neighbours;
 	}
 
 	public Vector2 getForce(Steering steering) {
-		return SteeringUtilities.getSeekForce(steering, target);
-		/*
-		 * 	public void separate<T>(Neighbours<T> neighbours) where T : MonoBehaviour {
-		float TOO_CLOSE = 0.8f; // radius is 0.
-		Vector2 steer = new Vector2(0f, 0f);
-		float totalforce = 0f;
+		Vector2 steeringVector = new Vector2(0f, 0f);
 		// steer away from each object that is too close with a weight of up to 0.5 for each
-		foreach (Neighbour<T> neighbour in neighbours) {
-			if (neighbour.dd > TOO_CLOSE * TOO_CLOSE) {
+		foreach (Neighbour<Steering> neighbour in neighbours) {
+			if (neighbour.dd > preferredDistance * preferredDistance) {
 				break;
 			}
-			GameObject other = neighbour.obj.gameObject;
-			Vector2 offset = other.transform.position - transform.position;
-			float d = Mathf.Sqrt(neighbour.dd);
-			if (d == 0f) {
-				// Units spawn with identical position.
-				offset = new Vector2(0.01f, 0f);
-				d = 0.01f;
-			}
-			// only prioritize separation if the objects are moving toward each other
-			float importance = 0.5f;//(sameDir(v1, v2) || !sameDir(v1, offset)) ? 0.3f : 0.6f;
-			// force of 0.5 per other
-			float force = importance * (TOO_CLOSE - d)/TOO_CLOSE;
-			totalforce += force;
-			steer += (- force / d) * offset;
-			break;
+			Steering otherUnit = neighbour.obj;
+			Vector2 offset = otherUnit.getPosition() - steering.getPosition();
+			float currentDistance = Mathf.Sqrt(neighbour.dd);
+			// TODO: consider relative velocity when computing importance
+			float importance = (preferredDistance - currentDistance)/preferredDistance;
+			steeringVector += -importance * offset;
 		}
-		float m = steer.magnitude * ACCEL;
-		if (m >= forceRemaining) {
-			steer = scaled(forceRemaining, steer);
-			forceRemaining = 0f;
-		} else {
-			steer = ACCEL * steer;
-			forceRemaining -= m;
+		if (steeringVector.sqrMagnitude > 0) {
+			// TODO: do something like arrival to avoid over-separating
+			return SteeringUtilities.getForceForDirection(steering, steeringVector);
 		}
-		rb.AddForce(steer);
-	}
-		 */
+		return Vector2.zero;
 	}
 }

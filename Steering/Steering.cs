@@ -23,25 +23,27 @@ public class Steering : MonoBehaviour, ObjectWithPosition
 	private float acceleration = 20f;
 	private float radius = 0.5f;
 
-	private List<SteeringBehaviour> behaviours = new List<SteeringBehaviour>();
-	private List<float> behaviourWeights = new List<float>();
+	// The behaviour is the key so that the weight can be modified.
+	private Dictionary<SteeringBehaviour, float> weightedBehaviours = new Dictionary<SteeringBehaviour, float>();
 
 	public void Start() {
 		rb = GetComponent<Rigidbody2D>();
 	}
 
 	public void addBehaviour(float weight, SteeringBehaviour behaviour) {
-		behaviours.Add(behaviour);
-		behaviourWeights.Add(weight);
+		weightedBehaviours.Add(behaviour, weight);
 	}
 
-	// TODO: provide a way to change the weight of a behaviour
-	// aka either make steeringbehaviour abstract and give it properties
-	// or provide some sort of conditional/variable weight function when adding a behaviour
+	public void updateWeight(SteeringBehaviour behaviour, float newWeight) {
+		weightedBehaviours[behaviour] = newWeight;
+	}
+
+	public void removeBehaviour(SteeringBehaviour behaviour) {
+		weightedBehaviours.Remove(behaviour);
+	}
 
 	public void clearBehaviours() {
-		behaviours.Clear();
-		behaviourWeights.Clear();
+		weightedBehaviours.Clear();
 	}
 
 	// TODO: call getForce for each behaviour and provide a reference to the Steering object, or provide MAXV ACCEL etc.
@@ -50,11 +52,13 @@ public class Steering : MonoBehaviour, ObjectWithPosition
 	public void FixedUpdate () {
 		float totalWeight = 0f;
 		Vector2 totalForce = new Vector2();
-		for (int i=0; i< behaviours.Count; i++) {
-			Vector2 behaviourForce = behaviours[i].getForce(this);
-			totalForce += behaviourWeights[i] * behaviourForce;
-			totalWeight += behaviourWeights[i] * behaviourForce.magnitude / acceleration;
-			SteeringUtilities.drawDebugVector(this, 0.1f * behaviourForce, BEHAVIOUR_COLORS[i % BEHAVIOUR_COLORS.Length]);
+		int i = 0;
+		foreach (KeyValuePair<SteeringBehaviour, float> behaviourAndWeight in weightedBehaviours) {
+			Vector2 behaviourForce = behaviourAndWeight.Key.getForce(this);
+			totalForce += behaviourAndWeight.Value * behaviourForce;
+			totalWeight += behaviourAndWeight.Value * behaviourForce.magnitude / acceleration;
+			// TODO: define a mapping from behaviour to color, and provide some way to only draw lines for some behaviours
+			SteeringUtilities.drawDebugVector(this, 0.1f * behaviourForce, BEHAVIOUR_COLORS[i++ % BEHAVIOUR_COLORS.Length]);
 		}
 		// TODO: consider averaging the desired velocities instead of forces
 		if (totalWeight > 0f) {

@@ -8,6 +8,10 @@ public class Seek : SteeringBehaviour
 		this.target = target;
 	}
 
+	public void setTarget(Vector2 newTarget) {
+		this.target = newTarget;
+	}
+
 	public Vector2 getForce(Steering steering) {
 		return SteeringUtilities.getSeekForce(steering, target);
 	}
