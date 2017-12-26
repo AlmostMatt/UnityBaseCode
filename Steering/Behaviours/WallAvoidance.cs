@@ -12,7 +12,7 @@ public class WallAvoidance : SteeringBehaviour
 	}
 
 	public Vector2 getForce(Steering steering) {
-		float raycastDistance = steering.getSize() + 2f * (steering.getMaxSpeed() * steering.getMaxSpeed() / steering.getAcceleration());
+		float raycastDistance = (2f * steering.getSize()) + 2f * (steering.getMaxSpeed() * steering.getMaxSpeed() / steering.getAcceleration());
 		// TODO: send out 3 rays and define static quaternions to determine the rotated direction vectors.
 		Vector3 directionVector = steering.getVelocity();
 		// TODO: update the side raycast lengths based on steering's size, and the center raycast based on speed.
