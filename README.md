@@ -1,7 +1,7 @@
 # UnityBaseCode
 Contains some generic concepts that I find myself reusing across projects
 
-## Steering:
+## UnityBaseCode.Steering:
 Defines steering behaviours similar to those described by https://www.red3d.com/cwr/steer/
 
 Usage:
@@ -20,7 +20,7 @@ Supported Behaviours:
 * Cohesion (in progress)
 * Alignment (in progress)
 
-## StatusMap:
+## UnityBaseCode.Statuses:
 Tracks temporary status effects on an object. Status effects can optionally have begin and end callback functions.
 
 Usage:
@@ -29,7 +29,7 @@ Usage:
 * `statusMap.add(new Status(STATE.STUNNED), duration);`
 * `statusMap.has(STATE.STUNNED)`
 
-## ActionMap:
+## UnityBaseCode.Actions:
 Abilities have cooldowns and callback functions.
 
 Usage:

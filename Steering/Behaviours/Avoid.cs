@@ -1,14 +1,20 @@
 ﻿using UnityEngine;
 
-public class Avoid : SteeringBehaviour
+namespace UnityBaseCode
 {
-	Vector2 target;
+	namespace Steering
+	{
+		public class Avoid : SteeringBehaviour
+		{
+			Vector2 target;
 
-	public Avoid(Vector2 target) {
-		this.target = target;
-	}
+			public Avoid(Vector2 target) {
+				this.target = target;
+			}
 
-	public Vector2 getForce(Steering steering) {
-		return SteeringUtilities.getSeekForce(steering, target);
+			public Vector2 getForce(Steering steering) {
+				return SteeringUtilities.getSeekForce(steering, target);
+			}
+		}
 	}
 }

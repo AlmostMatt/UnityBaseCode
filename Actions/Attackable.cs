@@ -1,17 +1,24 @@
 ﻿using UnityEngine;
+using UnityBaseCode.Statuses;
 
-public interface Attackable {
-	Transform transform
+namespace UnityBaseCode
+{
+	namespace Actions
 	{
-		get;
+		public interface Attackable {
+			Transform transform
+			{
+				get;
+			}
+			float radius
+			{
+				get;
+			}
+			bool dead
+			{
+				get;
+			}
+			void damage(Actor attacker, int amount);
+		}
 	}
-	float radius
-	{
-		get;
-	}
-	bool dead
-	{
-		get;
-	}
-	void damage(Actor attacker, int amount);
 }
