@@ -61,6 +61,8 @@ namespace UnityBaseCode
 					// TODO: for head-on collisions steer to the right
 					// Steer in the direction of the component of the collision normal that is perpindicular to the current velocity.
 					// This way the unit will turn instead of just slowing down.
+
+					// TODO: use an amount of acceleration proportionate to the time until collision and the severity of the collision
 					return SteeringUtilities.scaledVector(steering.getAcceleration(), SteeringUtilities.perpindicularComponent(-closestOffset, steering.getVelocity()));
 					//return SteeringUtilities.getForceForDirection(steering, -closestOffset);
 				}
