@@ -5,8 +5,31 @@ Contains some generic concepts that I find myself reusing across projects
 Defines steering behaviours similar to those described by https://www.red3d.com/cwr/steer/
 
 Usage:
-* add a Steering component to an object
-* call `GetComponent<Steering>().addBehaviour(weight, behaviour)` in the Start() function of a script
+* Add a Steering component to a gameobject. Add behaviours and set properties programatically.
+
+API:
+* Steering.addBehaviour(float weight, SteeringBehaviour behaviour)
+* Steering.updateWeight(SteeringBehaviour behaviour, float newWeight)
+* Steering.removeBehaviour(SteeringBehaviour behaviour)
+* Steering.clearBehaviours()
+* Steering.setSize(float radius)
+* Steering.setSpeed(float maxSpeed, float acceleration)
+* float Steering.getSize()
+* float Steering.getMaxSpeed()
+* float Steering.getAcceleration()
+* Vector2 Steering.getPosition()
+* Vector2 Steering.getVelocity()
+
+Example:
+```csharp
+void Start () {
+  Steering steering = GetComponent<Steering>();
+  steering.setSpeed(3f, 12f);
+  steering.setSize(0.25f);
+  steering.addBehaviour(3f, new WallAvoidance());
+  steering.addBehaviour(1f, new Wander());
+}
+```
 
 Supported Behaviours:
 * Seek
