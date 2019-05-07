@@ -32,6 +32,10 @@ namespace UnityBaseCode
 
 			public void Start() {
 				rb = GetComponent<Rigidbody2D>();
+                if (!rb)
+                {
+                    rb = gameObject.AddComponent<Rigidbody2D>();
+                }
 			}
 
 			public void addBehaviour(float weight, SteeringBehaviour behaviour) {

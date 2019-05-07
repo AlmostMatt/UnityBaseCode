@@ -3,8 +3,9 @@
 namespace UnityBaseCode
 {
 	namespace Steering
-	{
-		public class Seek : SteeringBehaviour
+    {
+        // Moves directly towards a point
+        public class Seek : SteeringBehaviour
 		{
 			Vector2 target;
 

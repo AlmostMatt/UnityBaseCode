@@ -11,9 +11,14 @@ namespace UnityBaseCode
 
 			public Flee(Vector2 target) {
 				this.target = target;
-			}
+            }
 
-			public Vector2 getForce(Steering steering) {
+            public void setTarget(Vector2 newTarget)
+            {
+                this.target = newTarget;
+            }
+
+            public Vector2 getForce(Steering steering) {
 				return -SteeringUtilities.getSeekForce(steering, target);
 			}
 		}

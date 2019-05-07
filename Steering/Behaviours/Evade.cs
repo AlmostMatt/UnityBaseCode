@@ -11,9 +11,14 @@ namespace UnityBaseCode
 
 			public Evade(Steering otherObject) {
 				this.pursue = new Pursue(otherObject);
-			}
+            }
 
-			public Vector2 getForce(Steering steering) {
+            public void setTarget(Steering newTarget)
+            {
+                this.pursue.setTarget(newTarget);
+            }
+
+            public Vector2 getForce(Steering steering) {
 				return -pursue.getForce(steering);
 			}
 		}
