@@ -5,7 +5,10 @@ Contains some generic concepts that I find myself reusing across projects
 Defines steering behaviours similar to those described by https://www.red3d.com/cwr/steer/
 
 Usage:
-* Add a Steering component to a gameobject. Add behaviours and set properties programatically.
+* Add a Steering component to a gameobject.
+* (Optional) Add a RigidBody2D component - will be added if not found
+* (Optional) Add a Collider2D - only if you want collisions
+* Add behaviours and set properties programatically.
 
 API:
 * Steering.addBehaviour(float weight, SteeringBehaviour behaviour)
