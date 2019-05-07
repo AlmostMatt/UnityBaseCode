@@ -10,18 +10,20 @@ Usage:
 * (Optional) Add a Collider2D - only if you want collisions
 * Add behaviours and set properties programatically.
 
-API:
-* Steering.addBehaviour(float weight, SteeringBehaviour behaviour)
-* Steering.updateWeight(SteeringBehaviour behaviour, float newWeight)
-* Steering.removeBehaviour(SteeringBehaviour behaviour)
-* Steering.clearBehaviours()
-* Steering.setSize(float radius)
-* Steering.setSpeed(float maxSpeed, float acceleration)
-* float Steering.getSize()
-* float Steering.getMaxSpeed()
-* float Steering.getAcceleration()
-* Vector2 Steering.getPosition()
-* Vector2 Steering.getVelocity()
+Steering:
+```csharp
+Steering.addBehaviour(float weight, SteeringBehaviour behaviour)
+Steering.updateWeight(SteeringBehaviour behaviour, float newWeight)
+Steering.removeBehaviour(SteeringBehaviour behaviour)
+Steering.clearBehaviours()
+Steering.setSize(float radius)
+Steering.setSpeed(float maxSpeed, float acceleration)
+float Steering.getSize()
+float Steering.getMaxSpeed()
+float Steering.getAcceleration()
+Vector2 Steering.getPosition()
+Vector2 Steering.getVelocity()
+```
 
 Example:
 ```csharp
@@ -37,18 +39,20 @@ void Start () {
 ```
 
 Supported Behaviours:
-* Seek(Vector2 target)  /  setTarget(Vector2 newTarget)
-* Flee(Vector2 target)  /  setTarget(Vector2 newTarget)
-* Pursue(Steering otherObject)  /  setTarget(Steering newTarget)
-* Evade(Steering otherObject)  /  setTarget(Steering newTarget)
-* WallAvoidance(int layerMask = Physics2D.DefaultRaycastLayers)
-* Wander()
-* UnalignedCollisionAvoidance(Steering currentObject)
-* UnalignedCollisionAvoidance(Neighbours<Steering, Steering> neighbours)
-* Separate(Steering currentObject, float preferredDistance)
-* Separate(Neighbours<Steering, Steering> neighbours, float preferredDistance)
-* Cohesion (in progress)
-* Alignment (in progress)
+```csharp
+Seek(Vector2 target)  /  setTarget(Vector2 newTarget)
+Flee(Vector2 target)  /  setTarget(Vector2 newTarget)
+Pursue(Steering otherObject)  /  setTarget(Steering newTarget)
+Evade(Steering otherObject)  /  setTarget(Steering newTarget)
+WallAvoidance(int layerMask = Physics2D.DefaultRaycastLayers)
+Wander()
+UnalignedCollisionAvoidance(Steering currentObject)
+UnalignedCollisionAvoidance(Neighbours<Steering, Steering> neighbours)
+Separate(Steering currentObject, float preferredDistance)
+Separate(Neighbours<Steering, Steering> neighbours, float preferredDistance)
+Cohesion (in progress)
+Alignment (in progress)
+```
 
 Note: Behaviours that care about neighbors have a version that reacts to all other steering objects, and a version that takes a specific Neighbors object to indicate which steerings to interact with.
 
