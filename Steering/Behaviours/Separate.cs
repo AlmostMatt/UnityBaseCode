@@ -27,6 +27,8 @@ namespace UnityBaseCode
 				this.neighbours = neighbours;
 			}
 
+            // TODO: add functions to get and modify preferredDistance
+
 			public Vector2 getForce(Steering steering) {
 				Vector2 steeringVector = new Vector2(0f, 0f);
 				// steer away from each object that is too close with a weight of up to 0.5 for each

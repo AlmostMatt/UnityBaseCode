@@ -17,7 +17,7 @@ namespace UnityBaseCode
 			}
 
 			// TODO: figure out how to convert back and forth between neighbour<unit> and neighbour<steering>
-			// Possibly with GetComponent or with an interface ObjectWithSteering
+			// Possibly with GetComponent, with an interface ObjectWithSteering, or with a typed generic function
 			public UnalignedCollisionAvoidance(Neighbours<Steering, Steering> neighbours) {
 				isResponsibleForNeighbourUpdate = false;
 				this.neighbours = neighbours;

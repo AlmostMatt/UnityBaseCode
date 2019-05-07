@@ -13,6 +13,8 @@ namespace UnityBaseCode
 		 */
 		public class Steering : MonoBehaviour, ObjectWithPosition
 		{
+            // TODO: support RigidBody3D and support movement along the XZ plane
+
 			private Rigidbody2D rb;
 
 			// For debug lines:
@@ -41,6 +43,12 @@ namespace UnityBaseCode
 			public void addBehaviour(float weight, SteeringBehaviour behaviour) {
 				weightedBehaviours.Add(behaviour, weight);
 			}
+
+            // TODO: getBehaviours - get all behaviours
+
+            // TODO: getBehaviours<T> - get behaviour(s) of a specific type
+
+            // TODO: getWeight(Behaviour)
 
 			public void updateWeight(SteeringBehaviour behaviour, float newWeight) {
 				weightedBehaviours[behaviour] = newWeight;
@@ -71,6 +79,7 @@ namespace UnityBaseCode
 				// TODO: consider averaging the desired velocities instead of forces
 				if (totalWeight > 0f) {
 					//SteeringUtilities.drawDebugVector(this, 0.1f * totalForce / totalWeight, Color.blue);
+                    // TODO: scale the force with the object's mass
 					rb.AddForce(totalForce / totalWeight);
 				}
 				// Enforce a maximum speed
