@@ -83,10 +83,30 @@ Note: Behaviours that care about neighbors have a version that reacts to all oth
 Tracks temporary status effects on an object. Status effects can optionally have begin and end callback functions.
 
 Usage:
-* `statusMap = new StatusMap(this);`
-* in FixedUpdate: `statusMap.update(Time.fixedDeltaTime);`
-* `statusMap.add(new Status(STATE.STUNNED), duration);`
-* `statusMap.has(STATE.STUNNED)`
+
+
+public class Unit : MonoBehaviour, Actor
+{
+    private StatusMap _statusMap;
+    public StatusMap StatusMap { get { return _statusMap; } }
+    void Start()
+    {
+        _statusMap = new StatusMap(this);
+    }
+    void FixedUpdate()
+    {
+        _statusMap.update(Time.fixedDeltaTime);
+    }
+}
+
+public enum State { ANIMATION, STUNNED, INVULNERABLE, DEAD };
+
+Status is a wrapper around State + duration
+It can be superclassed to have custom begin and end callbacks 
+
+StatusMap.Add(Status s, float duration);`
+StatusMap.has(State state)
+StatusMap.duration(State state)
 
 ## UnityBaseCode.Actions:
 Abilities have cooldowns and callback functions.
