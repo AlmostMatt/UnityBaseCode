@@ -113,6 +113,8 @@ StatusMap.duration(State state)
 ## UnityBaseCode.Actions:
 Abilities have cooldowns and callback functions.
 
+Abilities have an ID that is specified when the ability is added, and are called by ID
+
 Usage:
 * add a statusMap property to the object (the ANIMATION status is added during the cast time of an ability).
 * `actionMap = new ActionMap(this);`
