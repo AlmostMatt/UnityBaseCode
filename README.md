@@ -83,8 +83,9 @@ Note: Behaviours that care about neighbors have a version that reacts to all oth
 Tracks temporary status effects on an object. Status effects can optionally have begin and end callback functions.
 
 Usage:
+A class that implements Actor should have a public gettable StatusMap, and should call the StatusMap's update function with the amount of time that has passed as an argument. 
 
-
+```csharp
 public class Unit : MonoBehaviour, Actor
 {
     private StatusMap _statusMap;
@@ -98,6 +99,7 @@ public class Unit : MonoBehaviour, Actor
         _statusMap.update(Time.fixedDeltaTime);
     }
 }
+```
 
 public enum State { ANIMATION, STUNNED, INVULNERABLE, DEAD };
 
