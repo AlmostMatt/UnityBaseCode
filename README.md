@@ -86,17 +86,11 @@ Usage:
 A class that implements Actor should have a public gettable StatusMap, and should call the StatusMap's update function with the amount of time that has passed as an argument. 
 
 ```csharp
-public class Unit : MonoBehaviour, Actor
+public class Unit : MonoBehaviour
 {
-    private StatusMap _statusMap;
-    public StatusMap StatusMap { get { return _statusMap; } }
     void Start()
     {
-        _statusMap = new StatusMap(this);
-    }
-    void FixedUpdate()
-    {
-        _statusMap.update(Time.fixedDeltaTime);
+        _statusMap = gameObject.AddComponent<StatusMap>();
     }
 }
 ```
@@ -116,12 +110,16 @@ Abilities have cooldowns and callback functions.
 Abilities have an ID that is specified when the ability is added, and are called by ID
 
 Usage:
-* add a statusMap property to the object (the ANIMATION status is added during the cast time of an ability).
-* `actionMap = new ActionMap(this);`
-* `actionMap.add(abilityNumber, new Ability(callbackFunction, cooldown, castTime));`
-* in FixedUpdate: `actionMap.update(Time.fixedDeltaTime);`
-* `if (actionMap.ready(abilityNumber) && !statusMap.has(STATE.STUNNED))`
-* `actionMap.use(abilityNumber, target);`
+* add ActionMap component to a gameobject
+
+Ability(AbilityCallback callback, float maxCooldown, float castTime = 0f)
+
+Add(int id, Ability action)
+Use(int abilityId, Attackable attackable)
+Use(int abilityId, Vector3 position)
+GetCooldown(int id)
+SetCooldown(int id, float cooldown)
+IsReady(int id)
 
 When an ability is used, if the owner GameObject has the StatusMap component and cast time has a non-zero value, the ANIMATION state will be added with a duration equal to the cast time.
 The ability's USE effect will happen after the animation time
