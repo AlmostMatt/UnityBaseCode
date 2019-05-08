@@ -121,6 +121,7 @@ Usage:
 * `if (actionMap.ready(abilityNumber) && !statusMap.has(STATE.STUNNED))`
 * `actionMap.use(abilityNumber, target);`
 
+When an ability is used, if the owner GameObject has the StatusMap component and cast time has a non-zero value, the ANIMATION state will be added with a duration equal to the cast time.
 
 Some of the functionality is demonstrated in https://github.com/AlmostMatt/SteeringDemo
 
