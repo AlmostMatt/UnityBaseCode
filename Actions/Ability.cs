@@ -11,58 +11,64 @@ namespace UnityBaseCode
 		public class Ability
 		{
 			// maxcd is constant, cd is remaining
-			private float maxcd;
-			private float cd;
+			private float _maxCooldown;
+			private float _cooldown;
 
 			// castTime is constant, animTime is the remaining amount
-			public float castTime;
-			private float animTime;
+			private float _castTime;
+			private float _animTime;
 
-			private AbilityCallback abilityCallback;
+			private AbilityCallback _abilityCallback;
 			private AbilityTarget target;
 
-			public Actor owner;
-
-			public Ability (AbilityCallback callback, float cooldown, float castT = 0f)
+			public Ability(AbilityCallback callback, float maxCooldown, float castTime = 0f)
 			{
-				abilityCallback = callback;
-				cd = 0f;
-				castTime = castT;
-				maxcd = cooldown;
+				_abilityCallback = callback;
+                _cooldown = 0f;
+				_castTime = castTime;
+                _maxCooldown = maxCooldown;
 			}
 
-			public bool ready() {
-				return cd <= 0f;
-			}
-
-			public void update(float dt) {
-				cd = Math.Max(0f, cd - dt);
-				if (animTime > 0) {
-					if (animTime <= dt) {
-						animTime = 0f;
-						abilityCallback(target);
+            // TODO: make a separate assembly so that 'internal' visibility is actually meaningful
+            internal void Update(float dt) {
+                _cooldown = Math.Max(0f, _cooldown - dt);
+				if (_animTime > 0) {
+					if (_animTime <= dt) {
+                        _animTime = 0f;
+                        _abilityCallback(target);
 					} else {
-						animTime -= dt;
+                        _animTime -= dt;
 					}
 				}
 			}
 
-			public void use(AbilityTarget abilityTarget) {
-				cd = maxcd;
-				if (castTime == 0f) {
-					abilityCallback(abilityTarget);
+            internal void Use(GameObject owner, AbilityTarget abilityTarget) {
+                _cooldown = _maxCooldown;
+				if (_castTime == 0f) {
+                    _abilityCallback(abilityTarget);
 				} else {
-					// record the target so that it is still known after the animation time has completed.
+                    // record the target so that it is still known after the animation time has completed.
 					this.target = abilityTarget;
-					animTime = castTime;
-					owner.statusMap.add(new Status(State.ANIMATION), castTime);
-				}
-			}
+                    _animTime = _castTime;
+                    StatusMap statusMap = owner.GetComponent<StatusMap>();
+                    if (statusMap != null)
+                    {
+                        statusMap.Add(new Status(State.ANIMATION), _castTime);
+                    }
+                }
+            }
 
-			// When something external affects the current cooldown.
-			public void setCurrentCooldown(float currentCooldown) {
-				cd = currentCooldown;
-			}
-		}
+            // Get the current cooldown (not max cooldown)
+            internal float GetCooldown()
+            {
+                return _cooldown;
+            }
+
+            // Set the current cooldown to a specific value.
+            internal void SetCooldown(float currentCooldown)
+            {
+                _cooldown = currentCooldown;
+            }
+        }
 	}
 }

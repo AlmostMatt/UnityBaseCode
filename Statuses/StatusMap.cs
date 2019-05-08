@@ -10,60 +10,59 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace UnityBaseCode
 {
 	namespace Statuses
 	{
-		public class StatusMap
-		{
-			private Dictionary<State, Status> statusMap;
-			private Actor owner;
+		public class StatusMap : MonoBehaviour
+        {
+            // TODO: consider just mapping state -> duration and state -> callbacks
+			private Dictionary<State, Status> _statusMap = new Dictionary<State, Status>();
 
-			public StatusMap(Actor unit)
-			{
-				statusMap = new Dictionary<State, Status>();
-				owner = unit;
-			}
-			
-			public void update(float dt) {
-				HashSet<State> expired = new HashSet<State>();
-				foreach (Status s in statusMap.Values) {
-					s.duration -= dt;
+            // TODO: consider Update vs FixedUpdate, and maybe make it configurable
+			public void FixedUpdate() {
+				List<State> expired = new List<State>();
+				foreach (Status s in _statusMap.Values) {
+					s.duration -= Time.fixedDeltaTime;
 					if (s.duration <= 0) {
-						s.expire(owner);
+						s.Expire(gameObject);
 						expired.Add(s.type);
 					}
 				}
 				foreach(State state in expired) {
-					statusMap.Remove(state);
-				}
-			}
-			
-			public void add(Status s, float duration) {
-				if (has (s.type)) {
-					statusMap[s.type].duration += duration;
-				} else {
-					s.duration = duration;
-					statusMap[s.type] = s;
-					s.begin(owner);
-				}
-			}
-			
-			public void remove(State s) {
-				if (has (s)) {
-					statusMap[s].expire(owner);
-					statusMap.Remove(s);
+                    _statusMap.Remove(state);
 				}
 			}
 
-			public bool has(State st) {
-				return (statusMap.ContainsKey(st));
+            // TODO: support multiple statuses of the same type and either merge, extend, stack, or overlap strategies
+            // TODO: take State directly instead of taking Status
+            // TODO: add arguments for begin / update / end delegates
+            public void Add(Status s, float duration) {
+				if (Has(s.type)) {
+                    _statusMap[s.type].duration += duration;
+				} else {
+					s.duration = duration;
+                    _statusMap[s.type] = s;
+					s.Begin(gameObject);
+				}
+			}
+			
+			public void Remove(State s) {
+				if (Has(s)) {
+                    _statusMap[s].Expire(gameObject);
+                    _statusMap.Remove(s);
+				}
+			}
+
+			public bool Has(State st) {
+				return (_statusMap.ContainsKey(st));
 			}
 
 			// this assumes the status exists
-			public float duration(State st) {
-				return statusMap[st].duration;
+			public float GetDuration(State st) {
+				return _statusMap[st].duration;
 			}
 		}
 	}

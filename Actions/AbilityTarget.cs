@@ -5,6 +5,7 @@ namespace UnityBaseCode
 {
 	namespace Actions
 	{
+        // TODO: consider having GameObject or Vector as target directly
 		public class AbilityTarget
 		{
 			// one of the following will be present

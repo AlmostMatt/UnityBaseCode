@@ -5,20 +5,21 @@ namespace UnityBaseCode
 {
 	namespace Actions
 	{
+        // TODO: remove this class, use GameObject
 		public interface Attackable {
 			Transform transform
 			{
 				get;
 			}
-			float radius
+			float Radius
 			{
 				get;
 			}
-			bool dead
+			bool Dead
 			{
 				get;
 			}
-			void damage(Actor attacker, int amount);
+			void Damage(GameObject attacker, int amount);
 		}
 	}
 }

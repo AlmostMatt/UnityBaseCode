@@ -14,53 +14,47 @@ using UnityBaseCode.Statuses;
 
 namespace UnityBaseCode {
 	namespace Actions {
-		public class ActionMap
+		public class ActionMap : MonoBehaviour
 		{
-			Dictionary<int, Ability> actions; 
-			private Actor owner;
+			Dictionary<int, Ability> actions = new Dictionary<int, Ability>();
 
-			public ActionMap (Actor unit)
-			{
-				actions = new Dictionary<int, Ability>();
-				owner = unit;
-			}
-
-			public void add(int id, Ability action) {
+			public void Add(int id, Ability action) {
 				if (actions.ContainsKey(id)) {
 					throw new ArgumentException();
 				}
 				actions.Add(id, action);
-				action.owner = owner;
 			}
 
-			public void use(int abilityId, Attackable attackable) {
-				use(abilityId, new AbilityTarget(attackable));
+			public void Use(int abilityId, Attackable attackable) {
+				Use(abilityId, new AbilityTarget(attackable));
 			}
 
-			public void use(int abilityId, Vector3 position) {
-				use(abilityId, new AbilityTarget(position));
+			public void Use(int abilityId, Vector3 position) {
+				Use(abilityId, new AbilityTarget(position));
 			}
 
-			private void use(int abilityId, AbilityTarget target) {
-				actions[abilityId].use(target);
-			}
+			private void Use(int abilityId, AbilityTarget target) {
+				actions[abilityId].Use(gameObject, target);
+            }
 
-			public void setCurrentCooldown(int id, float cooldown) {
-				actions[id].setCurrentCooldown(cooldown);
+            public float GetCooldown(int id)
+            {
+                return actions[id].GetCooldown();
+            }
+
+            public void SetCooldown(int id, float cooldown)
+            {
+                actions[id].SetCooldown(cooldown);
+            }
+
+            public bool IsReady(int id) {
+				return actions[id].GetCooldown() <= 0f;
 			}
 			
-			public bool ready(int id) {
-				return actions[id].ready();
-			}
-			
-			public void update(float dt) {
+			void FixedUpdate() {
 				foreach (Ability action in actions.Values) {
-					action.update(dt);
+					action.Update(Time.fixedDeltaTime);
 				}
-			}
-
-			public float getCastTime(int id) {
-				return actions[id].castTime;
 			}
 		}
 	}

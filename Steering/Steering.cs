@@ -13,6 +13,7 @@ namespace UnityBaseCode
 		 */
 		public class Steering : MonoBehaviour, ObjectWithPosition
 		{
+            // TODO: standardize naming (capitalize public things)
             // TODO: support RigidBody3D and support movement along the XZ plane
 
 			private Rigidbody2D rb;
