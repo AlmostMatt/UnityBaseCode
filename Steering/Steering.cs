@@ -74,7 +74,7 @@ namespace UnityBaseCode
 					Vector2 behaviourForce = behaviourAndWeight.Key.getForce(this);
 					totalForce += behaviourAndWeight.Value * behaviourForce;
 					totalWeight += behaviourAndWeight.Value * behaviourForce.magnitude / acceleration;
-					// TODO: define a mapping from behaviour to color, and provide some way to only draw lines for some behaviours
+					// TODO: define a mapping from behaviour-type to color, and provide some way to only draw lines for some behaviours
 					SteeringUtilities.drawDebugVector(this, 0.1f * behaviourForce, BEHAVIOUR_COLORS[i++ % BEHAVIOUR_COLORS.Length]);
 				}
 				// TODO: consider averaging the desired velocities instead of forces

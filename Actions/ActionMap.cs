@@ -25,17 +25,13 @@ namespace UnityBaseCode {
 				actions.Add(id, action);
 			}
 
-			public void Use(int abilityId, Attackable attackable) {
-				Use(abilityId, new AbilityTarget(attackable));
+			public void Use(int abilityId, GameObject targetObject) {
+                actions[abilityId].Use(gameObject, targetObject);
 			}
 
-			public void Use(int abilityId, Vector3 position) {
-				Use(abilityId, new AbilityTarget(position));
+			public void Use(int abilityId, Vector3 targetPosition) {
+                actions[abilityId].Use(gameObject, targetPosition);
 			}
-
-			private void Use(int abilityId, AbilityTarget target) {
-				actions[abilityId].Use(gameObject, target);
-            }
 
             public float GetCooldown(int id)
             {

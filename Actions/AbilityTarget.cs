@@ -9,24 +9,24 @@ namespace UnityBaseCode
 		public class AbilityTarget
 		{
 			// one of the following will be present
-			private Attackable attackableTarget;
+			private GameObject objectTarget;
 			private Vector3 positionTarget;
 
-			public AbilityTarget(Attackable attackableTarget) {
-				this.attackableTarget = attackableTarget;
+			public AbilityTarget(GameObject objectTarget) {
+				this.objectTarget = objectTarget;
 			}
 
 			public AbilityTarget(Vector3 positionTarget) {
 				this.positionTarget = positionTarget;
 			}
 
-			public Attackable getAttackableTarget() {
-				return this.attackableTarget;
+			public GameObject getTargetObject() {
+				return this.objectTarget;
 			}
 
 			public Vector3 getTargetPosition() {
-				if (attackableTarget != null) {
-					return attackableTarget.transform.position;
+				if (objectTarget != null) {
+					return objectTarget.transform.position;
 				}
 				return positionTarget;
 			}
