@@ -109,9 +109,11 @@ Abilities have cooldowns and callback functions.
 
 Abilities have an ID that is specified when the ability is added, and are called by ID
 
-Usage:
-* add ActionMap component to a gameobject
+API:
 
+```csharp
+public delegate void AbilityCallback(AbilityTarget target);
+    
 Ability(AbilityCallback callback, float maxCooldown, float castTime = 0f)
 
 Add(int id, Ability action)
@@ -120,6 +122,7 @@ Use(int abilityId, Vector3 position)
 GetCooldown(int id)
 SetCooldown(int id, float cooldown)
 IsReady(int id)
+```
 
 Example:
 ```csharp
