@@ -109,9 +109,11 @@ Abilities have cooldowns and callback functions.
 
 Abilities have an ID that is specified when the ability is added, and are called by ID
 
-Usage:
-* add ActionMap component to a gameobject
+API:
 
+```csharp
+public delegate void AbilityCallback(AbilityTarget target);
+    
 Ability(AbilityCallback callback, float maxCooldown, float castTime = 0f)
 
 Add(int id, Ability action)
@@ -120,6 +122,18 @@ Use(int abilityId, Vector3 position)
 GetCooldown(int id)
 SetCooldown(int id, float cooldown)
 IsReady(int id)
+```
+
+Example:
+```csharp
+private ActionMap _actionMap;
+_actionMap = gameObject.AddComponent<ActionMap>();
+_actionMap.Add(1, new Ability(target => target.getTargetObject().GetComponent<Unit>().Damage(5), 1f, 0.1f));
+if (_actionMap.IsReady(1))
+{
+    _actionMap.Use(1, otherUnit.gameObject);
+}
+```
 
 When an ability is used, if the owner GameObject has the StatusMap component and cast time has a non-zero value, the ANIMATION state will be added with a duration equal to the cast time.
 The ability's USE effect will happen after the animation time
