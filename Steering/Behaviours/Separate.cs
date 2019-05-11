@@ -29,15 +29,15 @@ namespace UnityBaseCode
 
             // TODO: add functions to get and modify preferredDistance
 
-			public Vector2 getForce(Steering steering) {
-				Vector2 steeringVector = new Vector2(0f, 0f);
+			public Vector3 GetForce(Steering steering) {
+				Vector3 steeringVector = new Vector3(0f, 0f, 0f);
 				// steer away from each object that is too close with a weight of up to 0.5 for each
 				foreach (Neighbour<Steering> neighbour in neighbours) {
 					if (neighbour.dd > preferredDistance * preferredDistance) {
 						break;
 					}
 					Steering otherUnit = neighbour.obj;
-					Vector2 offset = otherUnit.getPosition() - steering.getPosition();
+					Vector3 offset = otherUnit.GetPosition() - steering.GetPosition();
 					float currentDistance = Mathf.Sqrt(neighbour.dd);
 					// TODO: consider relative velocity when computing importance
 					float importance = (preferredDistance - currentDistance)/preferredDistance;
@@ -47,7 +47,7 @@ namespace UnityBaseCode
 					// TODO: do something like arrival to avoid over-separating
 					return SteeringUtilities.getForceForDirection(steering, steeringVector);
 				}
-				return Vector2.zero;
+				return Vector3.zero;
 			}
 		}
 	}

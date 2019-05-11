@@ -8,23 +8,24 @@ namespace UnityBaseCode
 		public class Wander : SteeringBehaviour
 		{
 			private float wanderNoise = 6f;
-			private Vector2 wanderPoint;
+			private Vector3 wanderPoint;
 			private bool hasMoved = false;
 			public Wander() {}
 
-			public Vector2 getForce(Steering steering) {
-				if (steering.getVelocity().sqrMagnitude == 0f) {
+			public Vector3 GetForce(Steering steering) {
+				if (steering.GetVelocity().sqrMagnitude == 0f) {
 					float initialAngle = Random.Range(0f, 2 * Mathf.PI);
-					wanderPoint = 2.4f * new Vector2(Mathf.Cos(initialAngle), Mathf.Sin(initialAngle));
+                    float sinAngle = Mathf.Sin(initialAngle);
+                    wanderPoint = 2.4f * new Vector3(Mathf.Cos(initialAngle), Steering.YMult * sinAngle, Steering.ZMult * sinAngle);
 				}
-				if (steering.getVelocity().sqrMagnitude > 0f && !hasMoved) {
+				if (steering.GetVelocity().sqrMagnitude > 0f && !hasMoved) {
 					hasMoved = true;
-					wanderPoint = SteeringUtilities.scaledVector(2.4f, steering.getVelocity());
+					wanderPoint = SteeringUtilities.scaledVector(2.4f, steering.GetVelocity());
 				}
-				wanderPoint += new Vector2(
-					Time.fixedDeltaTime * wanderNoise * Random.Range(-1f, 1f),
-					Time.fixedDeltaTime * wanderNoise * Random.Range(-1f, 1f));
-				Vector2 forwardPoint = steering.getPosition() + SteeringUtilities.scaledVector(1.41f, steering.getVelocity());
+                float xNoise = Time.fixedDeltaTime * wanderNoise * Random.Range(-1f, 1f);
+                float yzNoise = Time.fixedDeltaTime * wanderNoise * Random.Range(-1f, 1f);
+                wanderPoint += new Vector3(xNoise, Steering.YMult * yzNoise, Steering.ZMult * yzNoise);
+				Vector3 forwardPoint = steering.GetPosition() + SteeringUtilities.scaledVector(1.41f, steering.GetVelocity());
 				// Constrain the wander point to the unit circle in front of the player.
 				wanderPoint = forwardPoint + (wanderPoint - forwardPoint).normalized;
 				//return SteeringUtilities.getForceForDirection(steering, wanderDirection);

@@ -18,8 +18,8 @@ namespace UnityBaseCode
                 this.pursue.setTarget(newTarget);
             }
 
-            public Vector2 getForce(Steering steering) {
-				return -pursue.getForce(steering);
+            public Vector3 GetForce(Steering steering) {
+				return -pursue.GetForce(steering);
 			}
 		}
 	}

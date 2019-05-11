@@ -8,7 +8,7 @@ namespace UnityBaseCode
 	namespace Steering
 	{
 		public interface ObjectWithPosition {
-			Vector2 getPosition();
+			Vector3 GetPosition();
 		}
 		 	
 		public class Neighbour<T> : IComparable<Neighbour<T>> where T : ObjectWithPosition
@@ -72,9 +72,9 @@ namespace UnityBaseCode
 			// TODO: try swapping neighbour with prev neighbours as they are updated
 			// TODO: use a custom-sort algorithm that is efficient for mostly-sorted data
 			public void Update() {
-				Vector2 currentObjPos = currentObject.getPosition();
+				Vector3 currentObjPos = currentObject.GetPosition();
 				foreach (Neighbour<T2> neighbour in _neighbours) {
-					neighbour.dd = (neighbour.obj.getPosition() - currentObjPos).sqrMagnitude;
+					neighbour.dd = (neighbour.obj.GetPosition() - currentObjPos).sqrMagnitude;
 				}
 				_neighbours.Sort();
 			}
@@ -85,7 +85,7 @@ namespace UnityBaseCode
 			 */
 			// TODO: consider updating the order immediately, and using AddRange if multiple objects are added simultaneously
 			public void Add(T2 obj) {
-				_neighbours.Add(new Neighbour<T2>((obj.getPosition() - currentObject.getPosition()).sqrMagnitude, obj));
+				_neighbours.Add(new Neighbour<T2>((obj.GetPosition() - currentObject.GetPosition()).sqrMagnitude, obj));
 			}
 
 			/**

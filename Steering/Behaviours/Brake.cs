@@ -8,8 +8,8 @@ namespace UnityBaseCode
 		{
 			public Brake() {}
 
-			public Vector2 getForce(Steering steering) {
-				return SteeringUtilities.getForceForDesiredVelocity(steering, new Vector2());
+			public Vector3 GetForce(Steering steering) {
+				return SteeringUtilities.getForceForDesiredVelocity(steering, Vector3.zero);
 			}
 		}
 	}

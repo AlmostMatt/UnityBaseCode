@@ -7,18 +7,18 @@ namespace UnityBaseCode
 		// Moves directly away from a point
 		public class Flee : SteeringBehaviour
 		{
-			Vector2 target;
+			Vector3 target;
 
-			public Flee(Vector2 target) {
+			public Flee(Vector3 target) {
 				this.target = target;
             }
 
-            public void setTarget(Vector2 newTarget)
+            public void setTarget(Vector3 newTarget)
             {
                 this.target = newTarget;
             }
 
-            public Vector2 getForce(Steering steering) {
+            public Vector3 GetForce(Steering steering) {
 				return -SteeringUtilities.getSeekForce(steering, target);
 			}
 		}

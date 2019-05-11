@@ -6,19 +6,19 @@ namespace UnityBaseCode
 	{
 		public class Arrival : SteeringBehaviour
 		{
-			Vector2 target;
+			Vector3 target;
 
-			public Arrival(Vector2 target) {
+			public Arrival(Vector3 target) {
 				this.target = target;
 			}
 
-			public void setTarget(Vector2 newTarget) {
+			public void setTarget(Vector3 newTarget) {
 				this.target = newTarget;
 			}
 
-			public Vector2 getForce(Steering steering) {
+			public Vector3 GetForce(Steering steering) {
 				return SteeringUtilities.getSeekForce(steering, target);
-
+                // TODO: actually use stopping distance to arrive
 				/*
 				 * // can approximate with (if too close : break)
 				// alternatively stopdist from current pos and current speed
@@ -30,12 +30,12 @@ namespace UnityBaseCode
 				//dist = desiredv * desiredV/(2 * accel) 
 				//desiredv = sqrt(dist * 2 * accel) 
 
-				Vector2 offset = dest - ((Vector2) transform.position + (dt * rb.velocity));
+				Vector3 offset = dest - ((Vector3) transform.position + (dt * rb.velocity));
 
 				float dist = offset.magnitude;
 				float stopdist = MAXV * MAXV / (2 * ACCEL);
 				float desiredV = dist < stopdist ? Mathf.Sqrt(dist * 2 * ACCEL) : MAXV;
-				Vector2 deltaV = scaled (desiredV, offset) - rb.velocity;
+				Vector3 deltaV = scaled (desiredV, offset) - rb.velocity;
 				float dvmagn = deltaV.magnitude;
 				if (dvmagn > forceRemaining * forceRemaining * dt * dt) {
 					rb.AddForce(scaled(forceRemaining, deltaV));
