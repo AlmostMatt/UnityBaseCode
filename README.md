@@ -5,10 +5,16 @@ Contains some generic concepts that I find myself reusing across projects
 Defines steering behaviours similar to those described by https://www.red3d.com/cwr/steer/
 
 Usage:
+* boolean Steering.UseXZ can be set to move along the XZ plane instead of XY plane
+* By default, a Rigidbody2D will be added when using XY plane and Rigibody when using XZ plane
 * Add a Steering component to a GameObject.
-* (Optional) Add a RigidBody2D component - will be added if not found
+* (Optional) Add a Rigidbody2D or Rigidbody component - will be added if not found
 * (Optional) Add a Collider2D - only if you want collisions
 * Add behaviours and set properties programatically.
+
+Note:
+* The associated Rigidbody will be contrained to movement on the relevant axis and rotation disabled.
+* Steering logic assumes position and velocity of 0 along the constrained axis. Steering towards non-zero positions or towards objects with nonzero constrained axis velocity may cause problems.
 
 Example:
 ```csharp
