@@ -46,10 +46,16 @@ namespace UnityBaseCode
 			private float acceleration = 20f;
 			private float radius = 0.5f;
 
+            // The direction that this object is moving. Starts as positive x axis.
+            private Vector3 _movingDirection = Vector3.right;
+
 			// The behaviour is the key so that the weight can be modified.
 			private Dictionary<SteeringBehaviour, float> weightedBehaviours = new Dictionary<SteeringBehaviour, float>();
 
-			public void Start() {
+			public void Start()
+            {
+                //Debug.Log("YMult is: " + YMult);
+                //Debug.Log("ZMult is: " + ZMult);
                 _rb2D = GetComponent<Rigidbody2D>();
                 _rb3D = GetComponent<Rigidbody>();
                 if (!UseXZ && !Using3D && !_rb2D)
@@ -127,6 +133,10 @@ namespace UnityBaseCode
 				if (turnAutomatically && velocitySquared > 0.5) {
 					TurnToward(SteeringUtilities.angleForVector(GetVelocity()));
 				}
+                if (velocitySquared > 0f)
+                {
+                    _movingDirection = GetVelocity();
+                }
 				//SteeringUtilities.drawDebugVector(this, (0.5f * getVelocity()), VELOCITY_COLOR);
 			}
 
@@ -153,15 +163,21 @@ namespace UnityBaseCode
 
 			public Vector3 GetPosition() {
                 // TODO: consistently zero out irrelevant axis for any logic related to positions
-				return new Vector3(transform.position.x, YMult * transform.position.y, ZMult * transform.position.y);
-			}
+				return new Vector3(transform.position.x, YMult * transform.position.y, ZMult * transform.position.z);
+            }
 
-			public Vector3 GetVelocity() {
+            public Vector3 GetVelocity()
+            {
                 // TODO: maybe zero out irrelevant axis, maybe it is fine because of the physics constraint
                 return _rb2D ? (Vector3)_rb2D.velocity : _rb3D.velocity;
-			}
+            }
 
-			public float GetStoppingTime() {
+            public Vector3 GetDirection()
+            {
+                return _movingDirection.normalized;
+            }
+
+            public float GetStoppingTime() {
 				return GetVelocity().magnitude / GetAcceleration();
 			}
 
