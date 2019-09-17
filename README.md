@@ -14,7 +14,7 @@ Usage:
 
 Note:
 * The associated Rigidbody will be contrained to movement on the relevant axis and rotation disabled.
-* Steering logic assumes position and velocity of 0 along the constrained axis. Steering towards non-zero positions or towards objects with nonzero constrained axis velocity may cause problems.
+* Steering logic assumes position and velocity of 0 along the constrained axis. Steering towards non-zero position on this axis or towards objects with nonzero velocity on this axis may cause problems.
 
 Example:
 ```csharp
@@ -22,51 +22,51 @@ using UnityBaseCode.Steering;
 
 void Start () {
   Steering steering = GetComponent<Steering>();
-  steering.setSpeed(3f, 12f);
-  steering.setSize(0.25f);
-  steering.addBehaviour(3f, new WallAvoidance());
-  steering.addBehaviour(1f, new Wander());
+  steering.SetSpeed(3f, 12f);
+  steering.SetSize(0.25f);
+  steering.AddBehaviour(3f, new WallAvoidance());
+  steering.AddBehaviour(1f, new Wander());
 }
 ```
 
 Steering:
 ```csharp
-Steering.addBehaviour(float weight, SteeringBehaviour behaviour)
+Steering.AddBehaviour(float weight, SteeringBehaviour behaviour)
 
-Steering.removeBehaviour(SteeringBehaviour behaviour)
+Steering.RemoveBehaviour(SteeringBehaviour behaviour)
 
-Steering.clearBehaviours()
+Steering.ClearBehaviours()
 
-Steering.updateWeight(SteeringBehaviour behaviour, float newWeight)
+Steering.UpdateWeight(SteeringBehaviour behaviour, float newWeight)
 
-Steering.setSize(float radius)
+Steering.SetSize(float radius)
 
-Steering.setSpeed(float maxSpeed, float acceleration)
+Steering.SetSpeed(float maxSpeed, float acceleration)
 
-float Steering.getSize()
+float Steering.GetSize()
 
-float Steering.getMaxSpeed()
+float Steering.GetMaxSpeed()
 
-float Steering.getAcceleration()
+float Steering.GetAcceleration()
 
-Vector2 Steering.getPosition()
+Vector2 Steering.GetPosition()
 
-Vector2 Steering.getVelocity()
+Vector2 Steering.GetVelocity()
 ```
 
 Behaviours:
 ```csharp
 Seek(Vector2 target)
-  setTarget(Vector2 newTarget)
+  SetTarget(Vector2 newTarget)
 
 Flee(Vector2 target)
-  setTarget(Vector2 newTarget)
+  SetTarget(Vector2 newTarget)
 
 Pursue(Steering otherObject)
-   setTarget(Steering newTarget)
+   SetTarget(Steering newTarget)
 
 Evade(Steering otherObject)
-  setTarget(Steering newTarget)
+  SetTarget(Steering newTarget)
 
 WallAvoidance(int layerMask = Physics2D.DefaultRaycastLayers)
 
@@ -107,8 +107,8 @@ Status is a wrapper around State + duration
 It can be superclassed to have custom begin and end callbacks 
 
 StatusMap.Add(Status s, float duration);`
-StatusMap.has(State state)
-StatusMap.duration(State state)
+StatusMap.Has(State state)
+StatusMap.Duration(State state)
 
 ## UnityBaseCode.Actions:
 Abilities have cooldowns and callback functions.
