@@ -28,6 +28,11 @@ namespace UnityBaseCode
                 System.Action<GameObject> onCreateCallback = null)
             {
                 mContainer = container;
+                // Destroy any children other than the first
+                for (int i=container.childCount-1; i>0; i--)
+                {
+                    GameObject.Destroy(container.GetChild(i));
+                }
                 // Disable and detach the child, we just want to be able to copy it later
                 GameObject child = container.GetChild(0).gameObject;
                 child.SetActive(false);
@@ -95,7 +100,7 @@ namespace UnityBaseCode
                     }
                 }
                 // Disable any excess children
-                for (int i = index; i < mContainer.childCount; i++)
+                for (int i = mContainer.childCount -1; i >= index; i--)
                 {
                     GameObject excessObject = mContainer.GetChild(i).gameObject;
                     mObjectPool.Add(excessObject);
